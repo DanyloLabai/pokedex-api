@@ -10,7 +10,19 @@ export const getAllPokemons = async (req , res ) => {
     }
 }
 
-// доптсати видалення , доавання , та зміну після додання ролей
+
+export const getPokemonById = async (req ,res) => {
+    try{
+        const pokemon = await Pokemon.findById(req.params.id);
+        if(!pokemon){
+            return res.status(404).json({message: 'Pokemon not found'});
+        }
+        res.json(pokemon);
+    }catch(error){
+        res.status(500).json({message: 'Error' , error});
+    }
+}
+
 
 
 
