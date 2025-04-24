@@ -12,5 +12,6 @@ app.use('/api/auth' , authRoutes);
 app.use('/api/pokemons',PokemonRouter);
 app.use('/api' , UserRouter);
 app.use('/api/admin/pokemons', adminRouter);
+app.use('/api/admin/users', adminRouter);
 
 export default app;
