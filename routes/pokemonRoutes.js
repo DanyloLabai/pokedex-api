@@ -4,7 +4,7 @@ const router = express.Router();
 
 /**
  * @swagger
- * /pokemons:
+ * /api/pokemons:
  *   get:
  *     summary: Отримати список усіх покемонів
  *     description: Повертає масив усіх покемонів з бази даних.
@@ -44,9 +44,10 @@ const router = express.Router();
  */
 
 router.get('/', getAllPokemons);
+
 /**
  * @swagger
- * /pokemons/{id}:
+ * /api/pokemons/{id}:
  *   get:
  *     summary: Отримати інформацію про конкретного покемона за ID
  *     tags: [Pokemons]
