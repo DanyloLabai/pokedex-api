@@ -5,12 +5,17 @@ import dotenv from 'dotenv'
 import PokemonRouter from './routes/pokemonRoutes.js'
 import UserRouter from './routes/userRoutes.js';
 import adminRouter from './routes/adminRoutes.js';
-import { SwaggerUI , swaggerSpec } from './utils/swagger.js';
+import { SwaggerUI  } from './utils/swagger.js';
 import swaggerJSDoc from 'swagger-jsdoc';
+import YAML from 'yamljs';
 
 dotenv.config();
 
-app.use('/api-docs', SwaggerUI.serve, SwaggerUI.setup(swaggerSpec));
+const swaggerDocument = YAML.load('./utils/swagger.yaml');
+
+
+app.use('/api-docs', SwaggerUI.serve, SwaggerUI.setup(swaggerDocument));
+
 
 app.use(express.json());
 app.use('/api/auth' , authRoutes);
