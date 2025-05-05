@@ -72,6 +72,8 @@ paths:
       description: Повертає масив усіх покемонів з бази даних.
       tags:
         - Pokemons
+      security:
+        - bearerAuth: [] 
       responses:
         200:
           description: Список покемонів успішно отримано
@@ -108,6 +110,8 @@ paths:
     get:
       summary: Отримати інформацію про конкретного покемона за ID
       tags: [Pokemons]
+      security:
+        - bearerAuth: [] 
       parameters:
         - in: path
           name: id
@@ -146,3 +150,79 @@ paths:
                     example: 0
         404:
           description: Покемона з таким ID не знайдено
+
+  /api/admin/users/:
+    get:
+      summary: Отримати список всіх користувачів
+      description: Повертає масив усіх користувачів. Доступно лише адміністраторам.
+      tags:
+        - Admin
+      security:
+        - bearerAuth: []  
+      responses:
+        200:
+          description: Успішно отримано список користувачів
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    _id:
+                      type: string
+                      example: "68138666d40d1a4fa09f7961"
+                    username:
+                      type: string
+                      example: "adminUser"
+                    email:
+                      type: string
+                      example: "admin@example.com"
+                    role:
+                      type: string
+                      enum: [user, admin]
+                      example: "admin"
+                    pokemons:
+                      type: array
+                      items:
+                        type: string
+                      example: []
+                    favorites:
+                      type: array
+                      items:
+                        type: string
+                      example: []
+                    createdAt:
+                      type: string
+                      format: date-time
+                      example: "2025-05-01T14:34:14.005Z"
+        401:
+          description: Токен відсутній або недійсний
+        403:
+          description: Доступ лише для адміністраторів
+ 
+  
+components:
+  schemas:
+    RegistrationRequest:
+      type: object
+      required:
+        - username
+        - email
+        - password
+      properties:
+        username:
+          type: string
+          example: "bob2003"
+        email:
+          type: string
+          example: "bob33@gmail.com"
+        password:
+          type: string
+          example: "an34K3ldd"
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
