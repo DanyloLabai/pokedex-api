@@ -201,7 +201,341 @@ paths:
         403:
           description: Доступ лише для адміністраторів
  
+  /api/admin/users/{id}:
+    get:
+      summary: Отримати інформацію про конкретного користувача за ID
+      description: Повертає дані конкретного користувача. Доступно лише адміністраторам.
+      tags: [Admin]
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: Унікальний ID користувача
+          schema:
+            type: string
+      responses:
+        200:
+          description: Успішно отримано користувача
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  _id:
+                    type: string
+                    example: "68138666d40d1a4fa09f7961"
+                  username:
+                    type: string
+                    example: "adminUser"
+                  email:
+                    type: string
+                    example: "admin@example.com"
+                  role:
+                    type: string
+                    enum: [user, admin]
+                    example: "admin"
+                  pokemons:
+                    type: array
+                    items:
+                      type: string
+                    example: []
+                  favorites:
+                    type: array
+                    items:
+                      type: string
+                    example: []
+                  createdAt:
+                    type: string
+                    format: date-time
+                    example: "2025-05-01T14:34:14.005Z"
+        401:
+          description: Токен відсутній або недійсний
+        403:
+          description: Доступ лише для адміністраторів
+
+    delete:
+      summary: Видалити користувача за ID
+      description: Видаляє користувача. Доступно лише адміністраторам.
+      tags:
+        - Admin
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: Унікальний ID користувача
+      responses:
+        200:
+          description: Користувача успішно видалено
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Користувач успішно видалений"
+        404:
+          description: Користувача не знайдено
+        403:
+          description: Доступ лише для адміністраторів
+        401:
+          description: Неавторизований запит
+
+
+  /api/admin/pokemons/{id}:
+    delete:
+      summary: Видалити покемона за ID
+      description: Видаляє покемона за ID з БД. Доступно лише адміністраторам.
+      tags:
+        - Pokemons
+      security:
+        - bearerAuth: []  
+      parameters:  
+        - in: path
+          name: id
+          required: true
+          description: Унікальний ID покемона
+          schema:
+            type: string
+      responses:
+        200:
+          description: Успішно видалено покемона
+          content:
+            application/json:  
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Покемон успішно видалений"
+
+    put:
+      summary: Оновити дані покемона за ID
+      description: Оновлює інформацію про покемона. Доступно лише адміністраторам.
+      tags:
+        - Pokemons
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: Унікальний ID покемона
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: "blastoise"
+                type:
+                  type: array
+                  items:
+                    type: string
+                  example: ["water"]
+                image:
+                  type: string
+                  example: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/9.png"
+      responses:
+        200:
+          description: Покемона успішно оновлено
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  _id:
+                    type: string
+                    example: "677fcce62d6b558c4d251d64"
+                  name:
+                    type: string
+                    example: "blastoise"
+                  type:
+                    type: array
+                    items:
+                      type: string
+                    example: ["water"]
+                  image:
+                    type: string
+                    example: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/9.png"
+                  createdAt:
+                    type: string
+                    format: date-time
+                    example: "2025-04-16T15:29:42.367Z"
+        400:
+          description: Помилка валідації
+        401:
+          description: Токен відсутній або недійсний
+        403:
+          description: Доступ лише для адміністраторів
+        404:
+          description: Покемона з таким ID не знайдено
+
+
+
   
+  /api/admin/pokemons/:
+    post:
+      summary: Додати нового покемона
+      description: Створює нового покемона в базі даних. Доступно лише адміністраторам.
+      tags:
+        - Pokemons
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+              properties:
+                name:
+                  type: string
+                  example: "charizard"
+                type:
+                  type: array
+                  items:
+                    type: string
+                  example: ["fire", "flying"]
+                image:
+                  type: string
+                  example: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/6.png"
+      responses:
+        201:
+          description: Покемона успішно створено
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  _id:
+                    type: string
+                    example: "689fece62d6b558c4d251999"
+                  name:
+                    type: string
+                    example: "charizard"
+                  type:
+                    type: array
+                    items:
+                      type: string
+                    example: ["fire", "flying"]
+                  image:
+                    type: string
+                    example: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/6.png"
+                  createdAt:
+                    type: string
+                    format: date-time
+                    example: "2025-05-06T10:32:41.123Z"
+        400:
+          description: Помилка валідації
+        401:
+          description: Токен відсутній або недійсний
+        403:
+          description: Доступ лише для адміністраторів
+
+  /api/user/{userId}/pokemons:
+    post:
+      summary: Додати покемона до списку покемонів користувача
+      description: Додає покемона до списку покемонів користувача. Потрібна авторизація.
+      tags:
+        - Users
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          description: Унікальний ID користувача
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                pokemonId:
+                  type: string
+                  example: "60c72b2f9e1d8b45b8bff79a"
+      responses:
+        200:
+          description: Покемона успішно додано до користувача
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Покемона додано до списку користувача"
+        400:
+          description: Помилка валідації
+        401:
+          description: Токен відсутній або недійсний
+        404:
+          description: Користувача або покемона не знайдено
+        500:
+          description: Внутрішня помилка сервера
+
+  /api/user/{userId}/favorites:
+    post:
+      summary: Додати покемона до списку улюблених користувача
+      description: Додає покемона до списку улюблених покемонів користувача. Потрібна авторизація.
+      tags:
+        - Users
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          description: Унікальний ID користувача
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                pokemonId:
+                  type: string
+                  example: "60c72b2f9e1d8b45b8bff79a"
+      responses:
+        200:
+          description: Покемона успішно додано до улюблених користувача
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Покемона додано до улюблених користувача"
+        400:
+          description: Помилка валідації
+        401:
+          description: Токен відсутній або недійсний
+        404:
+          description: Користувача або покемона не знайдено
+        500:
+          description: Внутрішня помилка сервера
+
 components:
   schemas:
     RegistrationRequest:
@@ -220,6 +554,49 @@ components:
         password:
           type: string
           example: "an34K3ldd"
+    RegistrationResponse:
+      type: object
+      properties:
+        token:
+          type: string
+          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MWExM2JhNDZhNjQ5NjZhNjc4NzQ2MiIsImlhdCI6MTc0NjUzOTQ1MCwiZXhwIjoxNzQ3MTQ0MjUwfQ.9Jk7z9KQs94OkQSMPBDI1jupBSPK9030dkvU3SNJzHY"
+        message:
+          type: string
+          example: "Registration successful"
+      required:
+        - token
+        - message
+      
+    AuthRequest:
+        type: object
+        required:
+          - email
+          - password
+        properties:
+          email:
+            type: string
+            example: "bob33@gmail.com"
+          password:
+            type: string
+            example: "an34K3ldd"
+    AuthResponse:
+      type: object
+      properties:
+        token:
+          type: string
+          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODEzODY2NmQ0MGQxYTRmYTA5Zjc5NjEiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NDY1MzkzNDAsImV4cCI6MTc0NjU0Mjk0MH0.psLFMPeF5unCSh37LltPGlCaquDtlx7bj6n3r3VH25U"
+        user:
+          type: object
+          properties:
+            id:
+              type: string
+              example: "68138666d40d1a4fa09f7961"
+            username:
+              type: string
+              example: "user"
+      required:
+        - token
+        - user
 
   securitySchemes:
     bearerAuth:
